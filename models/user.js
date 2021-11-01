@@ -10,10 +10,37 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    userType: {
+        type: String,
+        required: true,
+        enum: ['Doctor', 'Patient', 'Kiosk_admin']
+    },
     name: {
         type: String,
         required: true
-    }
+    },
+    age: {
+        type: Number,
+        required: true
+    },
+    phoneNumber: {
+        type: String,
+        required: true
+    },
+    avatar: String,
+    specialization: String,
+    appointmentCount: Number,
+    successfulAppointmentCount: Number,
+    cancelledAppointmentCount: Number,
+    patientCount: Number,
+    futureAppointment: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Appointment'
+        }
+    ],
+    preferredStartTime: String,
+    preferredEndTime: String
 }, {
     timestamps: true
 });
