@@ -85,9 +85,28 @@ module.exports.deleteAppointment = async function(req, res) {
     }
 }
 
-module.exports.details = function(req, res) {
-    return res.status(200).json({
-        message: "Hello World",
-        success: true
-    });
+module.exports.details = async function(req, res) {
+    try {
+        let appointment =  await Appointment.findById(req.params.id);
+        if(!appointment) {
+            return res.status(404).json({
+                message: "Appointment not found",
+                success: false,
+            });
+        }
+        return res.status(200).json({
+            message: "Appointment Details Retrieved",
+            success: false,
+            data: {
+                appointment: appointment
+            }
+        });
+
+    } catch {
+        console.log(err);
+        return res.status(500).json({
+            message: "Internal Server Error",
+            success: false
+        });  
+    }
 }
