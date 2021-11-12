@@ -1,0 +1,294 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "telemedicine-api",
+    "description": "telemedicine-api",
+    "version": "0.1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000"
+    }
+  ],
+  "paths": {
+    "/api/users/create-session": {
+      "post": {
+        "description": "Login user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/users_createsession_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n    \"email\": \"kingominho56@test.com\",\n    \"password\":\"Test123@\"\n}"
+                },
+                "1": {
+                  "value": "{\n    \"email\": \"kingominho@test.com\",\n    \"password\":\"Test123@d\"\n}"
+                },
+                "2": {
+                  "value": "{\n    \"email\": \"kingominho@test.com\",\n    \"password\":\"Test123@\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful login",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "$ref": "#/components/schemas/response_body_createsession"
+                },
+                "examples": {
+                  "2": {
+                    "value": "{\n \"message\": \"Sign in successful, here is your token, please keep it safe\",\n \"success\": true,\n \"data\": {\n \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MThkNWRlNjUxNWNiZGM0ZTY1Njc2MDciLCJlbWFpbCI6ImtpbmdvbWluaG9AdGVzdC5jb20iLCJwYXNzd29yZCI6IlRlc3QxMjNAIiwidXNlclR5cGUiOiJEb2N0b3IiLCJuYW1lIjoiS2luZ29NaW5obyIsImFnZSI6MjIsInBob25lTnVtYmVyIjoiMTIzNDU2Nzg5MCIsImZ1dHVyZUFwcG9pbnRtZW50IjpbXSwiY3JlYXRlZEF0IjoiMjAyMS0xMS0xMVQxODoxNjowNi45MDRaIiwidXBkYXRlZEF0IjoiMjAyMS0xMS0xMVQxODoxNjowNi45MDRaIiwiX192IjowLCJpYXQiOjE2MzY2ODYxODcsImV4cCI6MTYzNjc3MjU4N30.5xSfYQkPiWby6UqaZBmezpy8rh68fEUD-xMIJAxXSYc\",\n \"user\": {\n \"name\": \"KingoMinho\",\n \"email\": \"kingominho@test.com\",\n \"_id\": \"618d5de6515cbdc4e6567607\"\n }\n }"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid User name or Password",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                },
+                "examples": {}
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:8000"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://localhost:8000"
+        }
+      ]
+    },
+    "/api/users/register-user": {
+      "post": {
+        "description": "User registration",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/users_registeruser_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n    \"email\": \"kingominho@test.com\",\n    \"password\": \"Test123@\",\n    \"confirm_password\":\"Test123@\",\n    \"userType\":\"Kiosk_admin\",\n    \"name\": \"KingoMinho Kiosk_admin\",\n    \"age\":22,\n    \"phoneNumber\":\"1234567890\"\n}"
+                },
+                "1": {
+                  "value": "{\n    \"email\": \"kingominho3@test.com\",\n    \"password\": \"Test123@\",\n    \"confirm_password\":\"Test123@a\",\n    \"userType\":\"Kiosk_admin\",\n    \"name\": \"KingoMinho Kiosk_admin\",\n    \"age\":22,\n    \"phoneNumber\":\"1234567890\"\n}"
+                },
+                "2": {
+                  "value": "{\n    \"email\": \"kingominho3@test.com\",\n    \"password\": \"Test123@\",\n    \"confirm_password\":\"Test123@\",\n    \"userType\":\"Kiosk_admin\",\n    \"name\": \"KingoMinho Kiosk_admin\",\n    \"age\":22,\n    \"phoneNumber\":\"1234567890\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful registration",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                },
+                "examples": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Password and confirm password doesn't match",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                },
+                "examples": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Duplicate email",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                },
+                "examples": {}
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:8000"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://localhost:8000"
+        }
+      ]
+    },
+    "/api/users/{id}": {
+      "get": {
+        "description": "Auto generated using Swagger Inspector",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the user to get",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful GET",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                },
+                "examples": {}
+              }
+            }
+          },
+          "404": {
+            "description": "User not found. Invalid User Id",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                },
+                "examples": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "jwt": [
+              "JWT"
+            ]
+          }
+        ],
+        "servers": [
+          {
+            "url": "http://localhost:8000"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://localhost:8000"
+        }
+      ]
+    }
+  },
+  "components": {
+    "schemas": {
+      "response_body_createsession": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/response_body_createsession_data"
+          }
+        }
+      },
+      "users_createsession_body": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "users_registeruser_body": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "userType": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "age": {
+            "type": "integer"
+          },
+          "confirm_password": {
+            "type": "string"
+          }
+        }
+      },
+      "response_body_createsession_data_user": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "_id": {
+            "type": "string"
+          }
+        }
+      },
+      "response_body_createsession_data": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "user": {
+            "$ref": "#/components/schemas/response_body_createsession_data_user"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "jwt": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
