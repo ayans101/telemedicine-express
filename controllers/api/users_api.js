@@ -1,6 +1,10 @@
 const User = require('../../models/user');
 const env = require('../../config/environment');
 const jwt = require('jsonwebtoken');
+const { db } = require('../../config/environment');
+const accountSid = "ACac7e7a383e47c6ea4a3014c64b88a914";
+const authToken = "b43bbb70bd3764de595dd416cb546ae1";
+const client = require('twilio')(accountSid, authToken);
 
 module.exports.createSession = async function(req, res){
     try{
@@ -43,6 +47,7 @@ module.exports.registerUser = function(req, res){
         });
     }else{
         User.findOne({email: req.body.email}, function(err, user){
+            let otp = 10000;
             if(!user){
                 User.create(req.body, function(err, user){
                     return res.status(200).json({
@@ -56,11 +61,16 @@ module.exports.registerUser = function(req, res){
                                 name: user.name,
                                 age: user.age,
                                 phoneNumber: user.phoneNumber,
-                                _id: user._id
+                                _id: user._id,
+                                otp: otp
                             }
                         }
                     });
                 });
+                client.messages
+                    .create({body: otp, from: '+15017122661', to: user.phoneNumber})
+                    .then(message => console.log(message.sid));
+                //RETURN TO A PAGE FOR ENTERING THE OTP
             }else{
                 return res.status(422).json({
                     message: "There already exists an account registered with this email address",
@@ -104,3 +114,26 @@ module.exports.profile = async function(req, res){
         });
     }
 };
+
+
+module.exports.verifyOTP = function (req, res) {
+    models.users.findOne({email: req.body.email}, function (err, user) {
+        if (err) {
+            //NO USER WITH GIVEN EMAIL
+            console.log(err.message);
+        }
+        else {
+            if (req.body.otp == user.otp) {
+                //USER IS VALID, REDIRECT TO LOGIN
+            }
+            else {
+                //USER IS NOT VALID, DELETING USER
+                db.dropUser("user");
+                return res.status(401).json({
+                    message: "Wrong OTP",
+                    success: false
+                })
+            }
+        }
+    })
+}
