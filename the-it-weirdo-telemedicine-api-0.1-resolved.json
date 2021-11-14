@@ -1,0 +1,251 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "telemedicine-api",
+    "description": "telemedicine-api",
+    "version": "0.1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000"
+    }
+  ],
+  "paths": {
+    "/api/users/create-session": {
+      "post": {
+        "description": "Auto generated using Swagger Inspector",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/users_createsession_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n    \"email\": \"kingominho56@test.com\",\n    \"password\":\"Test123@\"\n}"
+                },
+                "1": {
+                  "value": "{\n    \"email\": \"kingominho@test.com\",\n    \"password\":\"Test123@d\"\n}"
+                },
+                "2": {
+                  "value": "{\n    \"email\": \"kingominho@test.com\",\n    \"password\":\"Test123@\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Auto generated using Swagger Inspector",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                },
+                "examples": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Auto generated using Swagger Inspector",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                },
+                "examples": {}
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:8000"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://localhost:8000"
+        }
+      ]
+    },
+    "/api/users/register-user": {
+      "post": {
+        "description": "Auto generated using Swagger Inspector",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/users_registeruser_body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\n    \"email\": \"kingominho@test.com\",\n    \"password\": \"Test123@\",\n    \"confirm_password\":\"Test123@\",\n    \"userType\":\"Kiosk_admin\",\n    \"name\": \"KingoMinho Kiosk_admin\",\n    \"age\":22,\n    \"phoneNumber\":\"1234567890\"\n}"
+                },
+                "1": {
+                  "value": "{\n    \"email\": \"kingominho3@test.com\",\n    \"password\": \"Test123@\",\n    \"confirm_password\":\"Test123@a\",\n    \"userType\":\"Kiosk_admin\",\n    \"name\": \"KingoMinho Kiosk_admin\",\n    \"age\":22,\n    \"phoneNumber\":\"1234567890\"\n}"
+                },
+                "2": {
+                  "value": "{\n    \"email\": \"kingominho3@test.com\",\n    \"password\": \"Test123@\",\n    \"confirm_password\":\"Test123@\",\n    \"userType\":\"Kiosk_admin\",\n    \"name\": \"KingoMinho Kiosk_admin\",\n    \"age\":22,\n    \"phoneNumber\":\"1234567890\"\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Auto generated using Swagger Inspector",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                },
+                "examples": {}
+              }
+            }
+          },
+          "400": {
+            "description": "Auto generated using Swagger Inspector",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                },
+                "examples": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Auto generated using Swagger Inspector",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                },
+                "examples": {}
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:8000"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://localhost:8000"
+        }
+      ]
+    },
+    "/api/users/{id}": {
+      "get": {
+        "description": "Auto generated using Swagger Inspector",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the user to get",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Auto generated using Swagger Inspector",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                },
+                "examples": {}
+              }
+            }
+          },
+          "404": {
+            "description": "Auto generated using Swagger Inspector",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                },
+                "examples": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "jwt": [
+              "JWT"
+            ]
+          }
+        ],
+        "servers": [
+          {
+            "url": "http://localhost:8000"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://localhost:8000"
+        }
+      ]
+    }
+  },
+  "components": {
+    "schemas": {
+      "users_createsession_body": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "users_registeruser_body": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string"
+          },
+          "phoneNumber": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "userType": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "age": {
+            "type": "integer"
+          },
+          "confirm_password": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "jwt": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
