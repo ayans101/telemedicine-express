@@ -1,16 +1,16 @@
 const express = require("express");
 const app = express();
 const port = 8000;
-const db =require('./config/mongoose');
+const db = require('./config/mongoose');
 const User = require('./models/user');
 const passport = require("passport");
 const passportJWT = require("./config/passport-jwt-strategy");
 const cors = require('cors');
 const swaggerUi = require("swagger-ui-express");
-const swaggerFile = require("./api_doc.json")
+const swaggerFile = require("./api_doc.json");
 
-app.use(express.json());
 app.use(cors()); 
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 

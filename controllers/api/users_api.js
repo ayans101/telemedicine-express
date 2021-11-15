@@ -1,12 +1,7 @@
 const User = require('../../models/user');
 const env = require('../../config/environment');
 const jwt = require('jsonwebtoken');
-/*
-const { db } = require('../../config/environment');
-const accountSid = "ACac7e7a383e47c6ea4a3014c64b88a914";
-const authToken = "b43bbb70bd3764de595dd416cb546ae1";
-const client = require('twilio')(accountSid, authToken);
-*/
+// const client = require('twilio')(env.twilio_account_sid, env.twilio_auth_token);
 
 module.exports.login = async function(req, res){
     try{
@@ -112,7 +107,7 @@ module.exports.profile = async function(req, res){
 
 module.exports.generateOTP = async function(req, res) {
     try {
-        
+
         // TODO
 
     } catch {
@@ -137,7 +132,7 @@ module.exports.verifyOTP = function (req, res) {
             }
             else {
                 //USER IS NOT VALID, DELETING USER
-                db.dropUser("user");
+                //db.dropUser("user");    //  try using "await user.remove();"
                 return res.status(401).json({
                     message: "Wrong OTP",
                     success: false
