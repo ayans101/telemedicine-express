@@ -1,12 +1,14 @@
 const User = require('../../models/user');
 const env = require('../../config/environment');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 // const client = require('twilio')(env.twilio_account_sid, env.twilio_auth_token);
 
 module.exports.login = async function(req, res){
     try{
         let user = await User.findOne({email: req.body.email});
-        if(!user || user.password != req.body.password){
+        let isPasswordMatched = await bcrypt.compare(req.body.password, user.password);
+        if(!user || !isPasswordMatched){
             return res.status(422).json({
                 message: "Invalid username or password",
                 success: false
@@ -44,6 +46,9 @@ module.exports.register = async function(req, res){
                 success: false
             });
         }
+        const salt = await bcrypt.genSalt(8);
+        const hashedPassword = await bcrypt.hash(req.body.password, salt);
+        req.body.password = hashedPassword;
         await User.create(req.body, function(err, user){
             return res.status(200).json({
                 message: "Sign up successful, here is your token, please keep it safe",
