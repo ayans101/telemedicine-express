@@ -6,6 +6,6 @@ const usersApi = require('../../controllers/api/users_api');
 router.post('/login', usersApi.login);
 router.post('/register', usersApi.register);
 router.get('/:id', passport.authenticate('jwt', {session: false}), usersApi.profile);
-// router.post('/verify-otp', usersApi.verifyOTP);
-// router.post('/generate-otp', usersApi.generateOTP);
+router.post('/verify-otp', usersApi.verifyOTP);
+router.post('/generate-otp', usersApi.generateOTP);
 module.exports = router;
