@@ -1,8 +1,9 @@
 const User = require('../../models/user');
+const Otp = require('../../models/otp');
 const env = require('../../config/environment');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-// const client = require('twilio')(env.twilio_account_sid, env.twilio_auth_token);
+const client = require('twilio')(env.twilio_account_sid, env.twilio_auth_token);
 
 module.exports.login = async function(req, res){
     try{
@@ -76,6 +77,7 @@ module.exports.register = async function(req, res){
     }   
 }
 
+
 module.exports.profile = async function(req, res){
     try{
         let user = await User.findById(req.params.id);
@@ -110,10 +112,19 @@ module.exports.profile = async function(req, res){
     }
 };
 
-module.exports.generateOTP = async function(req, res) {
+module.exports.generateOTP = async function (req, res) {
     try {
-
-        // TODO
+        let phoneNumber = req.body.phoneNumber;
+        let otp = Math.floor(Math.random() * 900000) + 100000;
+        let new_otp = new Otp({ phone: phoneNumber, otp: otp });
+        new_otp.save (function (err) {
+            if (err) {
+                //error handling
+            };
+        });
+        client.messages
+            .create({body: otp, from: '+15017122661', to: phoneNumber})
+            .then(message => console.log(message.sid));
 
     } catch {
         console.log(err);
@@ -124,20 +135,21 @@ module.exports.generateOTP = async function(req, res) {
     }
 }
 
-/*
 module.exports.verifyOTP = function (req, res) {
-    models.users.findOne({email: req.body.email}, function (err, user) {
+    models.Otp.findOne({phoneNumber: req.body.phone}, function (err, otp) {
         if (err) {
-            //NO USER WITH GIVEN EMAIL
+            //NO USER WITH GIVEN PHONE NUMBER
             console.log(err.message);
         }
         else {
-            if (req.body.otp == user.otp) {
+            if (req.body.otp == otp.otp) {
                 //USER IS VALID, REDIRECT TO LOGIN
             }
             else {
                 //USER IS NOT VALID, DELETING USER
-                //db.dropUser("user");    //  try using "await user.remove();"
+                const removeUser = async() => {
+                    let func = await otp.remove();
+                }
                 return res.status(401).json({
                     message: "Wrong OTP",
                     success: false
@@ -146,4 +158,3 @@ module.exports.verifyOTP = function (req, res) {
         }
     })
 }
-*/
