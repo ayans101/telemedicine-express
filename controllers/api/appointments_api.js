@@ -155,3 +155,24 @@ module.exports.details = async function(req, res) {
         });  
     }
 }
+
+module.exports.returnDoctors = async function (req, res) {
+    try {
+        let user = req.user;
+        if (user.userType == "Doctor") {
+            User.find({userType: "Doctor"}, function(err, users) {
+                res.render('/usersList', {users: users});
+            });
+        }
+        else {
+            //REDIRECT
+        }
+
+    } catch {
+        console.log(err);
+        return res.status(500).json({
+            message: "Internal Server Error",
+            success: false
+        });  
+    }
+}
