@@ -11,7 +11,7 @@
     }
   ],
   "paths": {
-    "/api/users/create-session": {
+    "/api/users/login": {
       "post": {
         "description": "Login user",
         "requestBody": {
@@ -74,7 +74,7 @@
         }
       ]
     },
-    "/api/users/register-user": {
+    "/api/users/register": {
       "post": {
         "description": "User registration",
         "requestBody": {
