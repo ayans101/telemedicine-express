@@ -185,7 +185,38 @@ module.exports.requestedAppointments = async function(req, res) {
                 list: list
             }
         });
-    } catch {
+    } catch(err) {
+        console.log(err);
+        return res.status(500).json({
+            message: "Internal Server Error",
+            success: false
+        });  
+    }
+}
+
+module.exports.acceptAppointment = async function(req, res) {
+    try {
+        let doctor = await User.findById(req.params.user_id);
+        if(!doctor || doctor.userType !== 'Doctor') {
+            return res.status(404).json({
+                message: "Doctor not found",
+                success: false,
+            });
+        }
+        await Appointment.findByIdAndUpdate(req.params.appointment_id, 
+            {
+                enabled: true, 
+                doctors: [doctor]
+            });
+        let appointment = await Appointment.findById(req.params.appointment_id);
+        return res.status(200).json({
+            message: "Appointment Request Accepted Successfully",
+            success: true,
+            data: {
+                appointment: appointment
+            }
+        });
+    } catch(err) {
         console.log(err);
         return res.status(500).json({
             message: "Internal Server Error",

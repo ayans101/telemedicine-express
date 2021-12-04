@@ -8,4 +8,5 @@ router.post('/update', passport.authenticate('jwt', {session: false}), appointme
 router.post('/delete', passport.authenticate('jwt', {session: false}), appointmentsApi.deleteAppointment);
 router.get('/:id', passport.authenticate('jwt', {session: false}), appointmentsApi.details);
 router.get('/requestedAppointments/doctor=:id', passport.authenticate('jwt', {session: false}), appointmentsApi.requestedAppointments);
+router.post('/accept/appointment=:appointment_id&doctor=:user_id', passport.authenticate('jwt', {session: false}), appointmentsApi.acceptAppointment);
 module.exports = router;
