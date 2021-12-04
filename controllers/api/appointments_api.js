@@ -35,7 +35,7 @@ module.exports.createAppointment = async function(req, res) {
             });
         });
 
-    } catch {
+    } catch(err) {
         console.log(err);
         return res.status(500).json({
             message: "Internal Server Error",
@@ -87,7 +87,7 @@ module.exports.updateAppointment = async function(req, res) {
             }
         });
 
-    } catch {
+    } catch(err) {
         console.log(err);
         return res.status(500).json({
             message: "Internal Server Error",
@@ -127,7 +127,7 @@ module.exports.deleteAppointment = async function(req, res) {
             success: true,
         });
 
-    } catch {
+    } catch(err) {
         console.log(err);
         return res.status(500).json({
             message: "Internal Server Error",
@@ -153,7 +153,7 @@ module.exports.details = async function(req, res) {
             }
         });
 
-    } catch {
+    } catch(err) {
         console.log(err);
         return res.status(500).json({
             message: "Internal Server Error",
