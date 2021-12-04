@@ -11,6 +11,16 @@ const appointmentSchema = new mongoose.Schema({
             ref: 'User'
         }
     ],
+    doctors: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'   
+        }
+    ],
+    enabled: {
+        type: Boolean,
+        required: true
+    },
     appointmentStartTime: {
         type: String,
         required: true

@@ -5,13 +5,19 @@ module.exports.createAppointment = async function(req, res) {
     try {
 
         let creator = await User.findById(req.body.creator);
-        if(!creator || creator.userType !== 'Doctor') {
+        // if(!creator || creator.userType !== 'Doctor') {
+        if(!creator) {
             return res.status(404).json({
-                message: "User not found or User is not a Doctor",
+                // message: "User not found or User is not a Doctor",
+                message: "User not found",
                 success: false,
             });
         }
-        await Appointment.create(req.body, async function(err, appointment) {
+        let details = {
+            ...req.body,
+            enabled: false
+        };
+        await Appointment.create(details, async function(err, appointment) {
             for(uid of appointment.attendees) {
                 let attendee = await User.findById(uid);
                 if(attendee) {
@@ -141,12 +147,44 @@ module.exports.details = async function(req, res) {
         }
         return res.status(200).json({
             message: "Appointment Details Retrieved",
-            success: false,
+            success: true,
             data: {
                 appointment: appointment
             }
         });
 
+    } catch {
+        console.log(err);
+        return res.status(500).json({
+            message: "Internal Server Error",
+            success: false
+        });  
+    }
+}
+
+module.exports.requestedAppointments = async function(req, res) {
+    try {
+        let doctor = await User.findById(req.params.id);
+        if(!doctor || doctor.userType !== 'Doctor') {
+            return res.status(404).json({
+                message: "Doctor not found",
+                success: false,
+            });
+        }
+        let list = [];
+        for(appointment_id of doctor.futureAppointment) {
+            let appointment = await Appointment.findById(appointment_id);
+            if(appointment.enabled === false) {
+                list.push(appointment);
+            }
+        }
+        return res.status(200).json({
+            message: "Requested Appointments List Retrieved",
+            success: true,
+            data: {
+                list: list
+            }
+        });
     } catch {
         console.log(err);
         return res.status(500).json({
