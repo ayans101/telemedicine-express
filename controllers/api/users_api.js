@@ -1,9 +1,7 @@
 const User = require('../../models/user');
-const Otp = require('../../models/otp');
 const env = require('../../config/environment');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const client = require('twilio')(env.twilio_account_sid, env.twilio_auth_token);
 
 module.exports.login = async function(req, res){
     try{
