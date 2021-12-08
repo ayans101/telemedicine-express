@@ -6,26 +6,30 @@ const prescriptionSchema = new mongoose.Schema({
     ref: "Appointment",
     required: [true, "Prescription should be attached to an appointment"],
   },
-  doctorId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: [true, "Prescription should be written by a doctor"],
-  },
-  patientId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: [true, "Prescription should be written for a patient"],
-  },
+  // doctorId: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: "User",
+  //   required: [true, "Prescription should be written by a doctor"],
+  // },
+  // patientId: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: "User",
+  //   required: [true, "Prescription should be written for a patient"],
+  // },
   patientDetails: {
-    age: {
-      type: Number,
-      required: true,
-    },
-    gender: {
-      type: String,
-      required: true,
-      enum: ["Non-binary", "Female", "Male", "Undisclosed"],
-    },
+    // age: {
+    //   type: Number,
+    //   required: true,
+    // },
+    // gender: {
+    //   type: String,
+    //   required: true,
+    //   enum: ["Non-binary", "Female", "Male", "Undisclosed"],
+    // },
+    // bloodGroup: {
+    //   type: String,
+    //   required: true,
+    // },
     height: {
       type: Number,
       required: true,
@@ -34,29 +38,26 @@ const prescriptionSchema = new mongoose.Schema({
       type: Number,
       required: true,
     },
-    bloodGroup: {
-      type: String,
-      required: true,
-    },
   },
-  body: {
-    problemDescription: {
+  result: {
+    problem: {
       type: String,
       required: [true, "What is the problem?"],
     },
-    diagnosis: { type: String, required: [true, "A diagnosis should be made"] },
-  },
-  recommendations: {
-    recommendedMedicines: [{ type: String }],
-    recommendedTests: [{ type: String }],
-  },
-  nextAppointmentScheduled: { type: Boolean, required: true },
-  nextAppointmentDate: {
-    type: String,
-    required: function () {
-      return this.nextAppointmentScheduled;
+    diagnosis: {
+      type: String,
+      required: [true, "A diagnosis should be made"],
     },
+    medicines: [{ type: String }],
+    tests: [{ type: String }],
   },
+  // nextAppointmentScheduled: { type: Boolean, required: true },
+  // nextAppointmentDate: {
+  //   type: String,
+  //   required: function () {
+  //     return this.nextAppointmentScheduled;
+  //   },
+  // },
   //   testReports: [
   //     {
   //       source: {
