@@ -28,11 +28,11 @@ module.exports.create = async function(req, res) {
 
 module.exports.all = async function all (req, res) {
     try {
-        const log = await Log.find();
+        const logs = await Log.find();
         return res.status(200).json({
-            message: "Logs Displayed Successfully",
+            message: "List of All Logs",
             success: true,
-            log: log
+            logs: logs
         });
     } catch(err) {
         console.log(err);
@@ -46,8 +46,14 @@ module.exports.all = async function all (req, res) {
 module.exports.read =  async function read (req, res) {
     try {
         let log = await Log.findById(req.params.id);
+        if(!log) {
+            return res.status(422).json({
+                message: "Invalid Log ID or Log Not Found",
+                success: false
+            });
+        }
         return res.status(200).json({
-            message: "Log displayed successfully",
+            message: "Log Details",
             success: true,
             log: log
         });
