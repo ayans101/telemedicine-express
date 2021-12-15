@@ -1,53 +1,56 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const appointmentSchema = new mongoose.Schema({
+const appointmentSchema = new mongoose.Schema(
+  {
     creator: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
     attendees: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
-        }
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
     ],
     doctors: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'   
-        }
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
     ],
     enabled: {
-        type: Boolean,
-        required: true
+      type: Boolean,
+      required: false,
     },
     appointmentStartTime: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     appointmentEndTime: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     meetLink: {
-        type: String,
-        required: true
+      type: String,
+      required: false,
     },
     recordingLink: String,
     prescriptionLinks: [
-        {
-            type: String
-        }
+      {
+        type: String,
+      },
     ],
     reportLinks: [
-        {
-            type: String
-        }
+      {
+        type: String,
+      },
     ],
-}, {
-    timestamps: true
-});
+  },
+  {
+    timestamps: true,
+  }
+);
 
-const Appointment = mongoose.model('Appointment', appointmentSchema);
+const Appointment = mongoose.model("Appointment", appointmentSchema);
 
 module.exports = Appointment;
