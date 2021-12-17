@@ -4,10 +4,8 @@ const User = require("../../models/user");
 module.exports.createAppointment = async function (req, res) {
   try {
     let creator = await User.findById(req.body.creator);
-    // if(!creator || creator.userType !== 'Doctor') {
     if (!creator) {
       return res.status(404).json({
-        // message: "User not found or User is not a Doctor",
         message: "User not found",
         success: false,
       });
@@ -16,14 +14,15 @@ module.exports.createAppointment = async function (req, res) {
       ...req.body,
       enabled: false,
     };
-    await Appointment.create(details, async function (err, appointment) {
-      for (uid of appointment.attendees) {
-        let attendee = await User.findById(uid);
-        if (attendee) {
-          await attendee.futureAppointment.push(appointment);
-          await attendee.save();
-        }
-      }
+    await Appointment.create(details, function (err, appointment) {
+      // await Appointment.create(details, async function (err, appointment) {
+      //   for (uid of appointment.attendees) {
+      //     let attendee = await User.findById(uid);
+      //     if (attendee) {
+      //       await attendee.futureAppointment.push(appointment);
+      //       await attendee.save();
+      //     }
+      //   }
       return res.status(200).json({
         message: "Appointment Created Successfully",
         success: true,
@@ -162,10 +161,19 @@ module.exports.requestedAppointments = async function (req, res) {
       });
     }
     let list = [];
-    for (appointment_id of doctor.futureAppointment) {
-      let appointment = await Appointment.findById(appointment_id);
-      if (appointment.enabled === false) {
-        list.push(appointment);
+    // for (appointment_id of doctor.futureAppointment) {
+    //   let appointment = await Appointment.findById(appointment_id);
+    //   if (appointment.enabled === false) {
+    //     list.push(appointment);
+    //   }
+    // }
+    let pending_appointments = await Appointment.find({ enabled: false });
+    for (appointment of pending_appointments) {
+      for (doctor_id of appointment.doctors) {
+        // if (toString(doctor_id) === toString(doctor._id)) {
+        if (doctor_id.equals(doctor._id)) {
+          list.push(appointment);
+        }
       }
     }
     return res.status(200).json({
@@ -198,6 +206,8 @@ module.exports.acceptAppointment = async function (req, res) {
       doctors: [doctor],
     });
     let appointment = await Appointment.findById(req.params.appointment_id);
+    await doctor.futureAppointment.push(appointment);
+    await doctor.save();
     return res.status(200).json({
       message: "Appointment Request Accepted Successfully",
       success: true,
