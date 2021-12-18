@@ -223,24 +223,3 @@ module.exports.acceptAppointment = async function (req, res) {
     });
   }
 };
-
-module.exports.returnDoctors = async function (req, res) {
-  try {
-      User.find({userType: "Doctor"}, function(err, users) {
-          return res.status(200).json({
-              message: "Doctor details Retrieved",
-              success: true,
-              data: {
-                  users: users
-              }
-          });
-      });
-
-  } catch {
-      console.log(err);
-      return res.status(500).json({
-          message: "Internal Server Error",
-          success: false
-      });  
-  }
-}

@@ -110,3 +110,25 @@ module.exports.profile = async function(req, res){
     }
 };
 
+module.exports.getAllDoctors = async function (req, res) {
+    try {
+        let doctors = await User.find({ userType: 'Doctor' });
+        for(doctor of doctors) {
+            doctor.password = null;
+        }
+        return res.status(200).json({
+            message: "Doctor details Retrieved",
+            success: true,
+            data: {
+                doctors: doctors
+            }
+        });
+  
+    } catch(err) {
+        console.log(err);
+        return res.status(500).json({
+            message: "Internal Server Error",
+            success: false
+        });  
+    }
+  }
