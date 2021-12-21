@@ -161,16 +161,9 @@ module.exports.requestedAppointments = async function (req, res) {
       });
     }
     let list = [];
-    // for (appointment_id of doctor.futureAppointment) {
-    //   let appointment = await Appointment.findById(appointment_id);
-    //   if (appointment.enabled === false) {
-    //     list.push(appointment);
-    //   }
-    // }
     let pending_appointments = await Appointment.find({ enabled: false });
     for (appointment of pending_appointments) {
       for (doctor_id of appointment.doctors) {
-        // if (toString(doctor_id) === toString(doctor._id)) {
         if (doctor_id.equals(doctor._id)) {
           list.push(appointment);
         }
@@ -194,18 +187,19 @@ module.exports.requestedAppointments = async function (req, res) {
 
 module.exports.acceptAppointment = async function (req, res) {
   try {
-    let doctor = await User.findById(req.params.user_id);
+    console.log(req.body);
+    let doctor = await User.findById(req.body.user_id);
     if (!doctor || doctor.userType !== "Doctor") {
       return res.status(404).json({
         message: "Doctor not found",
         success: false,
       });
     }
-    await Appointment.findByIdAndUpdate(req.params.appointment_id, {
+    await Appointment.findByIdAndUpdate(req.body.appointment_id, {
       enabled: true,
       doctors: [doctor],
     });
-    let appointment = await Appointment.findById(req.params.appointment_id);
+    let appointment = await Appointment.findById(req.body.appointment_id);
     await doctor.futureAppointment.push(appointment);
     await doctor.save();
     return res.status(200).json({

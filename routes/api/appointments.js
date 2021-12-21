@@ -29,7 +29,7 @@ router.get(
   appointmentsApi.requestedAppointments
 );
 router.post(
-  "/accept/appointment=:appointment_id&doctor=:user_id",
+  "/accept",
   passport.authenticate("jwt", { session: false }),
   appointmentsApi.acceptAppointment
 );
