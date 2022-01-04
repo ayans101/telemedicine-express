@@ -1,5 +1,6 @@
 const Prescription = require("../../models/prescription");
 const mongoose = require("mongoose");
+const Log = require("../../models/log");
 
 const checkValidPrescription = (prescription, res) => {
   if (!prescription) {
@@ -28,12 +29,19 @@ const handleError = (err, res) => {
 
 module.exports.create = async function (req, res) {
   try {
-    await Prescription.create(req.body, function (err, prescription) {
+    await Prescription.create(req.body, async function (err, prescription) {
       if (err) {
         return res
           .status(500)
           .json({ message: "Internal Server Error", success: false });
       } else {
+        let log = new Log({
+          type: "Prescription",
+          // user: user,
+          description: "Prescription Created",
+        });
+        await log.save();
+
         return res.status(200).json({
           message: "Prescription created",
           success: true,

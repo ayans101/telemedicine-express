@@ -2,6 +2,7 @@ const User = require("../../models/user");
 const env = require("../../config/environment");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const Log = require("../../models/log");
 
 module.exports.login = async function (req, res) {
   try {
@@ -16,6 +17,13 @@ module.exports.login = async function (req, res) {
         success: false,
       });
     }
+
+    let log = new Log({
+      type: "User",
+      user: user,
+      description: "User Logged In",
+    });
+    await log.save();
 
     return res.status(200).json({
       message: "Sign in successful, here is your token, please keep it safe",
@@ -51,7 +59,14 @@ module.exports.register = async function (req, res) {
     const salt = await bcrypt.genSalt(8);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
     req.body.password = hashedPassword;
-    await User.create(req.body, function (err, user) {
+    await User.create(req.body, async function (err, user) {
+      let log = new Log({
+        type: "User",
+        user: user,
+        description: "User Registered",
+      });
+      await log.save();
+
       return res.status(200).json({
         message: "Sign up successful, here is your token, please keep it safe",
         success: true,

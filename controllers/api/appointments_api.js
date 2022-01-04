@@ -1,5 +1,6 @@
 const Appointment = require("../../models/appointment");
 const User = require("../../models/user");
+const Log = require("../../models/log");
 
 module.exports.createAppointment = async function (req, res) {
   try {
@@ -14,15 +15,14 @@ module.exports.createAppointment = async function (req, res) {
       ...req.body,
       enabled: false,
     };
-    await Appointment.create(details, function (err, appointment) {
-      // await Appointment.create(details, async function (err, appointment) {
-      //   for (uid of appointment.attendees) {
-      //     let attendee = await User.findById(uid);
-      //     if (attendee) {
-      //       await attendee.futureAppointment.push(appointment);
-      //       await attendee.save();
-      //     }
-      //   }
+    await Appointment.create(details, async function (err, appointment) {
+      let log = new Log({
+        type: "Appointment",
+        user: creator,
+        description: "Appointment Created",
+      });
+      await log.save();
+
       return res.status(200).json({
         message: "Appointment Created Successfully",
         success: true,
@@ -187,7 +187,6 @@ module.exports.requestedAppointments = async function (req, res) {
 
 module.exports.acceptAppointment = async function (req, res) {
   try {
-    console.log(req.body);
     let doctor = await User.findById(req.body.user_id);
     if (!doctor || doctor.userType !== "Doctor") {
       return res.status(404).json({
@@ -202,6 +201,14 @@ module.exports.acceptAppointment = async function (req, res) {
     let appointment = await Appointment.findById(req.body.appointment_id);
     await doctor.futureAppointment.push(appointment);
     await doctor.save();
+
+    let log = new Log({
+      type: "Appointment",
+      user: doctor,
+      description: "Appointment Accepted",
+    });
+    await log.save();
+
     return res.status(200).json({
       message: "Appointment Request Accepted Successfully",
       success: true,

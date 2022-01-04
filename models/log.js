@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const logSchema = new mongoose.Schema({
     type: {
         type: String,
-        enum : ['SIGNUP', 'VIDEO_IN'],
+        enum : ['User', 'Appointment', 'Prescription'],
     },
     user: {
         type: mongoose.Schema.Types.ObjectId,
