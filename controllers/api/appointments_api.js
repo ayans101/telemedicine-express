@@ -152,8 +152,7 @@ module.exports.details = async function (req, res) {
 
 module.exports.requestedAppointments = async function (req, res) {
   try {
-    const { id } = req.params;
-    let doctor = await User.findById(id.trim());
+    let doctor = await User.findById(req.params.id);
     if (!doctor || doctor.userType !== "Doctor") {
       return res.status(404).json({
         message: "Doctor not found",
