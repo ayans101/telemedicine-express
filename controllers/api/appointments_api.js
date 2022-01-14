@@ -223,3 +223,28 @@ module.exports.acceptAppointment = async function (req, res) {
     });
   }
 };
+
+module.exports.createdAppointments = async function (req, res) {
+  try {
+    let creator = await User.findById(req.params.id);
+    if (!creator) {
+      return res.status(404).json({
+        message: "User not found",
+        success: false,
+      });
+    }
+    let list = await Appointment.find({ creator: creator }).sort("-createdAt");
+    return res.status(200).json({
+      message: "Created Appointments List Retrieved",
+      success: true,
+      data: {
+        list: list,
+      },
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
+  }
+};

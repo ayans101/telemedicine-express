@@ -33,4 +33,9 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   appointmentsApi.acceptAppointment
 );
+router.get(
+  "/createdAppointments/:id",
+  passport.authenticate("jwt", { session: false }),
+  appointmentsApi.createdAppointments
+);
 module.exports = router;
