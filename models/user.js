@@ -1,31 +1,38 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema(
+  {
     email: {
-        type: String,
-        required: true,
-        unique: true
+      type: String,
+      required: true,
+      unique: true,
     },
     password: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     userType: {
-        type: String,
-        required: true,
-        enum: ['Doctor', 'Patient', 'Kiosk_admin']
+      type: String,
+      required: true,
+      enum: ["Doctor", "Patient", "Kiosk_admin"],
     },
     name: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
-    age: {
-        type: Number,
-        required: true
+    DOB: {
+      type: String,
+    },
+    gender: {
+      type: String,
+      enum: ["Non-binary", "Female", "Male", "Undisclosed"],
+    },
+    bloodGroup: {
+      type: String,
     },
     phoneNumber: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     avatar: String,
     specialization: String,
@@ -34,18 +41,19 @@ const userSchema = new mongoose.Schema({
     cancelledAppointmentCount: Number,
     patientCount: Number,
     futureAppointment: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Appointment'
-        }
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Appointment",
+      },
     ],
     preferredStartTime: String,
-    preferredEndTime: String
-}, {
-    timestamps: true
-});
+    preferredEndTime: String,
+  },
+  {
+    timestamps: true,
+  }
+);
 
+const User = mongoose.model("User", userSchema);
 
-const User = mongoose.model('User', userSchema);
-
-module.exports = User; 
+module.exports = User;
