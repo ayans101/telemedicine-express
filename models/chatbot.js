@@ -7,17 +7,17 @@ const chatbotSchema = new mongoose.Schema(
       ref: "User",
     },
     age: {
-      type: string,
+      type: String,
     },
     height: {
-      type: string,
+      type: String,
     },
     BP: {
-      type: string,
+      type: String,
     },
     symptoms: [
       {
-        type: string,
+        type: String,
       },
     ],
   },
