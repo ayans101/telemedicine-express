@@ -37,7 +37,8 @@ const appointmentSchema = new mongoose.Schema(
     recordingLink: String,
     prescriptionLinks: [
       {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Prescription",
       },
     ],
     reportLinks: [
