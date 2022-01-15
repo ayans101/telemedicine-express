@@ -162,10 +162,11 @@ module.exports.requestedAppointments = async function (req, res) {
     let list = [];
     let pending_appointments = await Appointment.find({ enabled: false });
     for (appointment of pending_appointments) {
-      for (doctor_id of appointment.doctors) {
-        if (doctor_id.equals(doctor._id)) {
-          list.push(appointment);
-        }
+      if (appointment.doctors.includes(doctor._id)) {
+        appointment.creator = await User.findById(
+          appointment.creator.toString()
+        ).select("name");
+        list.push(appointment);
       }
     }
     return res.status(200).json({
