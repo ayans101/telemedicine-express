@@ -237,13 +237,17 @@ module.exports.createdAppointments = async function (req, res) {
     let appointments = await Appointment.find(
       { creator: creator, enabled: true },
       { appointmentStartTime: 1, appointmentEndTime: 1, doctors: 1 }
-    ).sort("-appointmentStartTime");
-    // TODO: make doctors list contain doctor name or the entire object
+    )
+      .sort("-appointmentStartTime")
+      .populate({
+        path: "doctors",
+        select: "-password",
+      });
     return res.status(200).json({
       message: "Created Appointments List Retrieved",
       success: true,
       data: {
-        list: list,
+        appointments: appointments,
       },
     });
   } catch (err) {
