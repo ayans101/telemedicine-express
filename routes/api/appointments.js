@@ -8,12 +8,12 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   appointmentsApi.createAppointment
 );
-router.post(
+router.put(
   "/update",
   passport.authenticate("jwt", { session: false }),
   appointmentsApi.updateAppointment
 );
-router.post(
+router.delete(
   "/delete",
   passport.authenticate("jwt", { session: false }),
   appointmentsApi.deleteAppointment
