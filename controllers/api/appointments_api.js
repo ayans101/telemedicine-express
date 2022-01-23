@@ -159,21 +159,18 @@ module.exports.requestedAppointments = async function (req, res) {
         success: false,
       });
     }
-    let list = [];
-    let pending_appointments = await Appointment.find({ enabled: false });
-    for (appointment of pending_appointments) {
-      if (appointment.doctors.includes(doctor._id)) {
-        appointment.creator = await User.findById(
-          appointment.creator.toString()
-        ).select("name");
-        list.push(appointment);
-      }
-    }
+    let pending_appointments = await Appointment.find({
+      enabled: false,
+      doctors: { $in: [doctor] },
+    }).populate({
+      path: "creator",
+      select: "-password",
+    });
     return res.status(200).json({
       message: "Requested Appointments List Retrieved",
       success: true,
       data: {
-        list: list,
+        list: pending_appointments,
       },
     });
   } catch (err) {
@@ -227,30 +224,53 @@ module.exports.acceptAppointment = async function (req, res) {
 
 module.exports.createdAppointments = async function (req, res) {
   try {
-    let creator = await User.findById(req.params.id);
-    if (!creator) {
+    let user = await User.findById(req.params.id);
+    if (!user) {
       return res.status(404).json({
         message: "User not found",
         success: false,
       });
     }
-    let appointments = await Appointment.find(
-      { creator: creator, enabled: true },
-      { appointmentStartTime: 1, appointmentEndTime: 1, doctors: 1 }
+    let personalAppointments = await Appointment.find(
+      { creator: user, enabled: true },
+      { appointmentStartTime: 1, appointmentEndTime: 1, doctors: 1, creator: 1 }
     )
       .sort("-appointmentStartTime")
-      .populate({
-        path: "doctors",
-        select: "-password",
-      });
+      .populate([
+        {
+          path: "doctors",
+          select: "-password",
+        },
+        {
+          path: "creator",
+          select: "-password",
+        },
+      ]);
+    let appointments = await Appointment.find(
+      { doctors: [user], enabled: true },
+      { appointmentStartTime: 1, appointmentEndTime: 1, doctors: 1, creator: 1 }
+    )
+      .sort("-appointmentStartTime")
+      .populate([
+        {
+          path: "doctors",
+          select: "-password",
+        },
+        {
+          path: "creator",
+          select: "-password",
+        },
+      ]);
     return res.status(200).json({
       message: "Created Appointments List Retrieved",
       success: true,
       data: {
+        personalAppointments: personalAppointments,
         appointments: appointments,
       },
     });
   } catch (err) {
+    console.log(err);
     return res.status(500).json({
       message: "Internal Server Error",
       success: false,
