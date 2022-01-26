@@ -154,9 +154,11 @@ module.exports.requestedAppointments = async function (req, res) {
   try {
     let doctor = await User.findById(req.params.id);
     if (!doctor || doctor.userType !== "Doctor") {
-      return res.status(404).json({
-        message: "Doctor not found",
-        success: false,
+      return res.status(204).json({
+        message: "No appointments for non-doctors",
+        data: {
+          list: [],
+        },
       });
     }
     let pending_appointments = await Appointment.find({
