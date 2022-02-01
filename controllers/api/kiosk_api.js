@@ -11,7 +11,14 @@ module.exports.createAppointment = async function (req, res) {
         success: false,
       });
     }
-    await Appointment.create(req.body, function (err, appointment) {
+    await Appointment.create(req.body, async function (err, appointment) {
+      let log = new Log({
+        type: "Kiosk",
+        user: creator,
+        description: "Appointment Created",
+      });
+      await log.save();
+
       return res.status(200).json({
         message: "Appointment Created Successfully by Kiosk",
         success: true,
@@ -63,6 +70,14 @@ module.exports.allotRoom = async function (req, res) {
     let doctorToBeMarked = await User.findById(req.body.doctor);
     doctorToBeMarked.readyToVisit = false;
     await doctorToBeMarked.save();
+
+    let log = new Log({
+      type: "Kiosk",
+      user: creator,
+      description: "Patient alloted to a doctor",
+    });
+    await log.save();
+
     return res.status(200).json({
       message: "Doctor marked occupied",
       success: true,
