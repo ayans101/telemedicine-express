@@ -21,6 +21,9 @@ const appointmentSchema = new mongoose.Schema(
     enabled: {
       type: Boolean,
     },
+    kioskRoom: {
+      type: Boolean,
+    },
     appointmentStartTime: {
       type: String,
     },
