@@ -19,7 +19,7 @@ router.get(
   kioskApi.availableRooms
 );
 
-// (from the rooms available kiosk2 manually allots room/doctor for first patient in queue)
+// (from the rooms/doctors available kiosk2 manually allots room/doctor for first patient in queue)
 // marks the doctor as occupied by setting readyToVisit false
 router.post(
   "/allotRoom",
@@ -36,4 +36,12 @@ router.delete(
   kioskApi.deleteAppointment
 );
 
+// lets expose another endpoint to set/unset readyToVisit for a doctor
+// (may be a doctor comes or leaves room in middle because of whatsoever reason)
+//  apart from docotr id send readyToVisit: true/false with request body
+router.post(
+  "/availability",
+  passport.authenticate("jwt", { session: false }),
+  kioskApi.markUnmarkDocotor
+);
 module.exports = router;

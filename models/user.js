@@ -48,6 +48,9 @@ const userSchema = new mongoose.Schema(
     ],
     preferredStartTime: String,
     preferredEndTime: String,
+    readyToVisit: {
+      type: Boolean,
+    },
   },
   {
     timestamps: true,
