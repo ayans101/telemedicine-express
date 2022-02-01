@@ -20,19 +20,15 @@ const appointmentSchema = new mongoose.Schema(
     ],
     enabled: {
       type: Boolean,
-      required: false,
     },
     appointmentStartTime: {
       type: String,
-      required: true,
     },
     appointmentEndTime: {
       type: String,
-      required: true,
     },
     meetLink: {
       type: String,
-      required: false,
     },
     recordingLink: String,
     prescriptionLinks: [
