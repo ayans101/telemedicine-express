@@ -150,6 +150,33 @@ module.exports.details = async function (req, res) {
   }
 };
 
+module.exports.getAppointmentPrescriptions = async function (req, res) {
+  try {
+    let appointment = await Appointment.findById(req.params.id).populate(
+      "prescriptionLinks"
+    );
+    if (!appointment) {
+      return res.status(404).json({
+        message: "Appointment not found",
+        success: false,
+      });
+    }
+    return res.status(200).json({
+      message: "Prescription Details Retrieved",
+      success: true,
+      data: {
+        prescriptions: appointment.prescriptionLinks,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
+  }
+};
+
 module.exports.requestedAppointments = async function (req, res) {
   try {
     let doctor = await User.findById(req.params.id);

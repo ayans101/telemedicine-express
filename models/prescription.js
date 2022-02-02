@@ -27,7 +27,7 @@ const prescriptionSchema = new mongoose.Schema({
     },
     medicines: [
       {
-        name: String,
+        medicine: String,
         dosage: String,
       },
     ],
