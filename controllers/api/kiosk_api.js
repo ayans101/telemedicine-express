@@ -82,7 +82,7 @@ module.exports.allotRoom = async function (req, res) {
       message: "Doctor marked occupied",
       success: true,
       data: {
-        availableDoctors: availableDoctors,
+        markedDoctor: doctorToBeMarked,
       },
     });
   } catch (err) {
@@ -139,10 +139,17 @@ module.exports.markUnmarkDocotor = async function (req, res) {
     let doctorToBeMarked = await User.findById(req.body.doctor);
     doctorToBeMarked.readyToVisit = req.body.readyToVisit;
     await doctorToBeMarked.save();
-    return res.status(200).json({
-      message: "Doctor/room marked availble/ not available",
-      success: true,
-    });
+    if (doctorToBeMarked.readyToVisit) {
+      return res.status(200).json({
+        message: "Doctor/room marked availble",
+        success: true,
+      });
+    } else {
+      return res.status(200).json({
+        message: "Doctor/room marked unavailable",
+        success: true,
+      });
+    }
   } catch (err) {
     console.log(err);
     return res.status(500).json({
