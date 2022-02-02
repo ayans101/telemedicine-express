@@ -30,36 +30,33 @@ const handleError = (err, res) => {
 
 module.exports.create = async function (req, res) {
   try {
-    await Prescription.create(
-      req.body.prescription,
-      async function (err, prescription) {
-        if (err) {
-          return res
-            .status(500)
-            .json({ message: "Internal Server Error", success: false });
-        } else {
-          let log = new Log({
-            type: "Prescription",
-            // user: user,
-            description: "Prescription Created",
-          });
-          await log.save();
+    await Prescription.create(req.body, async function (err, prescription) {
+      if (err) {
+        return res
+          .status(500)
+          .json({ message: "Internal Server Error", success: false });
+      } else {
+        let log = new Log({
+          type: "Prescription",
+          // user: user,
+          description: "Prescription Created",
+        });
+        await log.save();
 
-          let appointment = await Appointment.findById(req.body.appointment);
-          appointment.prescriptionLinks.push(prescription);
-          await appointment.save();
-          
-          return res.status(200).json({
-            message: "Prescription created",
-            success: true,
-            data: {
-              _id: prescription._id,
-              prescription: prescription,
-            },
-          });
-        }
+        let appointment = await Appointment.findById(prescription.appointmentId);
+        appointment.prescriptionLinks.push(prescription);
+        await appointment.save();
+
+        return res.status(200).json({
+          message: "Prescription created",
+          success: true,
+          data: {
+            _id: prescription._id,
+            prescription: prescription,
+          },
+        });
       }
-    );
+    });
   } catch (error) {
     return handleError(error, res);
   }
