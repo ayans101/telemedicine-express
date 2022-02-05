@@ -43,7 +43,9 @@ module.exports.create = async function (req, res) {
         });
         await log.save();
 
-        let appointment = await Appointment.findById(prescription.appointmentId);
+        let appointment = await Appointment.findById(
+          prescription.appointmentId
+        );
         appointment.prescriptionLinks.push(prescription);
         await appointment.save();
 

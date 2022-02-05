@@ -124,32 +124,23 @@ module.exports.deleteAppointment = async function (req, res) {
   }
 };
 
-module.exports.markUnmarkDocotor = async function (req, res) {
+module.exports.makeAvailable = async function (req, res) {
   try {
-    let creator = await User.findById(req.body.creator);
-    if (
-      !creator ||
-      !(creator.userType === "Kiosk_admin" || creator.userType === "Doctor")
-    ) {
+    let user = await User.findById(req.body.id);
+    if (!user) {
       return res.status(404).json({
-        message: "Kiosk/Doctor restricted operation",
+        message: "User not found!",
         success: false,
       });
     }
-    let doctorToBeMarked = await User.findById(req.body.doctor);
-    doctorToBeMarked.readyToVisit = req.body.readyToVisit;
-    await doctorToBeMarked.save();
-    if (doctorToBeMarked.readyToVisit) {
-      return res.status(200).json({
-        message: "Doctor/room marked availble",
-        success: true,
-      });
-    } else {
-      return res.status(200).json({
-        message: "Doctor/room marked unavailable",
-        success: true,
-      });
-    }
+    user.readyToVisit = req.body.status;
+    await user.save();
+    return res.status(200).json({
+      message: user.readyToVisit
+        ? "Doctor/room marked availble"
+        : "Doctor/room marked unavailable",
+      success: true,
+    });
   } catch (err) {
     console.log(err);
     return res.status(500).json({
