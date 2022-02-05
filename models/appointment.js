@@ -20,9 +20,11 @@ const appointmentSchema = new mongoose.Schema(
     ],
     enabled: {
       type: Boolean,
+      default: false,
     },
     kioskRoom: {
       type: Boolean,
+      default: false,
     },
     appointmentStartTime: {
       type: String,

@@ -11,11 +11,7 @@ module.exports.createAppointment = async function (req, res) {
         success: false,
       });
     }
-    let details = {
-      ...req.body,
-      enabled: false,
-    };
-    await Appointment.create(details, async function (err, appointment) {
+    await Appointment.create(req.body, async function (err, appointment) {
       let log = new Log({
         type: "Appointment",
         user: creator,
@@ -191,6 +187,7 @@ module.exports.requestedAppointments = async function (req, res) {
     let pending_appointments = await Appointment.find({
       enabled: false,
       doctors: { $in: [doctor] },
+      kioskRoom: false,
     }).populate({
       path: "creator",
       select: "-password",
@@ -261,7 +258,7 @@ module.exports.createdAppointments = async function (req, res) {
       });
     }
     let personalAppointments = await Appointment.find(
-      { creator: user, enabled: true },
+      { creator: user, enabled: true, kioskRoom: false },
       { appointmentStartTime: 1, appointmentEndTime: 1, doctors: 1, creator: 1 }
     )
       .sort("-appointmentStartTime")
@@ -276,7 +273,7 @@ module.exports.createdAppointments = async function (req, res) {
         },
       ]);
     let appointments = await Appointment.find(
-      { doctors: [user], enabled: true },
+      { doctors: [user], enabled: true, kioskRoom: false },
       { appointmentStartTime: 1, appointmentEndTime: 1, doctors: 1, creator: 1 }
     )
       .sort("-appointmentStartTime")
