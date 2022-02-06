@@ -94,7 +94,7 @@ module.exports.register = async function (req, res) {
 
 module.exports.profile = async function (req, res) {
   try {
-    let user = await User.findById(req.params.id);
+    let user = await User.findById({ _id: req.params.id }, { password: 0 });
     if (!user) {
       return res.status(404).json({
         message: "User not found",
@@ -104,16 +104,7 @@ module.exports.profile = async function (req, res) {
       return res.status(200).json({
         message: "User Details",
         success: true,
-        data: {
-          user: {
-            email: user.email,
-            userType: user.userType,
-            name: user.name,
-            age: user.age,
-            phoneNumber: user.phoneNumber,
-            _id: user._id,
-          },
-        },
+        data: user,
       });
     }
   } catch (err) {
@@ -129,11 +120,28 @@ module.exports.getAllDoctors = async function (req, res) {
   try {
     let doctors = await User.find({ userType: "Doctor" }).select("name");
     return res.status(200).json({
-      message: "Doctor details Retrieved",
+      message: "Doctor Retrieved",
       success: true,
       data: {
         doctors: doctors,
       },
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
+  }
+};
+
+module.exports.getAllPatients = async function (req, res) {
+  try {
+    let patients = await User.find({ userType: "Patient" }).select("name");
+    return res.status(200).json({
+      message: "Patients Retrieved",
+      success: true,
+      data: patients,
     });
   } catch (err) {
     console.log(err);

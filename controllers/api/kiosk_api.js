@@ -38,16 +38,23 @@ module.exports.createAppointment = async function (req, res) {
 
 module.exports.availableRooms = async function (req, res) {
   try {
-    let availableDoctors = await User.find({
-      userType: "Doctor",
-      readyToVisit: true,
-    });
-    return res.status(200).json({
-      message: "Available doctors List",
-      success: true,
-      data: {
-        availableDoctors: availableDoctors,
+    let rooms = await Appointment.find(
+      { enabled: true, kioskRoom: true },
+      { doctors: 1, attendees: 1 }
+    ).populate([
+      {
+        path: "doctors",
+        select: "-password",
       },
+      {
+        path: "attendees",
+        select: "-password",
+      },
+    ]);
+    return res.status(200).json({
+      message: "Rooms Retrieved",
+      success: true,
+      data: rooms,
     });
   } catch (err) {
     console.log(err);
