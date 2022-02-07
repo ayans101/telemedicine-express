@@ -131,6 +131,38 @@ module.exports.deleteAppointment = async function (req, res) {
   }
 };
 
+module.exports.addPatientToRoom = async function (req, res) {
+  try {
+    let appointment = await Appointment.findById(req.body.roomId);
+    if (!appointment) {
+      return res.status(404).json({
+        message: "Appointment not found!",
+        success: false,
+      });
+    }
+    let patient = await User.findById(req.body.patientId);
+    if (!patient) {
+      return res.status(404).json({
+        message: "User not found!",
+        success: false,
+      });
+    }
+    appointment.attendees.push(patient);
+    await appointment.save();
+    return res.status(200).json({
+      message: "Appointment Updated!",
+      success: true,
+      data: appointment,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
+  }
+};
+
 module.exports.makeAvailable = async function (req, res) {
   try {
     let user = await User.findById(req.body.id);
