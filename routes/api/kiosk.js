@@ -42,6 +42,12 @@ router.patch(
   kioskApi.addPatientToRoom
 );
 
+router.patch(
+  "/disable",
+  passport.authenticate("jwt", { session: false }),
+  kioskApi.disable
+);
+
 // lets expose another endpoint to set/unset readyToVisit for a doctor
 // (may be a doctor comes or leaves room in middle because of whatsoever reason)
 //  apart from docotr id send readyToVisit: true/false with request body

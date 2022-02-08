@@ -163,6 +163,30 @@ module.exports.addPatientToRoom = async function (req, res) {
   }
 };
 
+module.exports.disable = async function (req, res) {
+  try {
+    let appointment = await Appointment.findById(req.body.id);
+    if (!appointment) {
+      return res.status(404).json({
+        message: "Appointment not found!",
+        success: false,
+      });
+    }
+    appointment.enabled = false;
+    await appointment.save();
+    return res.status(200).json({
+      message: "Kiosk room updated",
+      success: true,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
+  }
+};
+
 module.exports.makeAvailable = async function (req, res) {
   try {
     let user = await User.findById(req.body.id);
