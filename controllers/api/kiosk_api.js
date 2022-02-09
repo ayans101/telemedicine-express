@@ -65,6 +65,55 @@ module.exports.availableRooms = async function (req, res) {
   }
 };
 
+module.exports.getRoomById = async function (req, res) {
+  try {
+    let user = await User.findById(req.params.userId);
+    let docRooms = await Appointment.find(
+      { kioskRoom: true, doctors: { $in: [user] } },
+      { doctors: 1, attendees: 1, prescriptionLinks: 1 }
+    ).populate([
+      {
+        path: "doctors",
+        select: "-password",
+      },
+      {
+        path: "attendees",
+        select: "-password",
+      },
+      {
+        path: "prescriptionLinks",
+      },
+    ]);
+    let patientRooms = await Appointment.find(
+      { kioskRoom: true, attendees: { $in: [user] } },
+      { doctors: 1, attendees: 1, prescriptionLinks: 1 }
+    ).populate([
+      {
+        path: "doctors",
+        select: "-password",
+      },
+      {
+        path: "attendees",
+        select: "-password",
+      },
+      {
+        path: "prescriptionLinks",
+      },
+    ]);
+    return res.status(200).json({
+      message: "Rooms Retrieved",
+      success: true,
+      data: docRooms.concat(patientRooms),
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
+  }
+};
+
 module.exports.allotRoom = async function (req, res) {
   try {
     let creator = await User.findById(req.body.creator);

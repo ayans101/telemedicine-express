@@ -19,6 +19,12 @@ router.get(
   kioskApi.availableRooms
 );
 
+router.get(
+  "/:userId",
+  passport.authenticate("jwt", { session: false }),
+  kioskApi.getRoomById
+);
+
 // (from the rooms/doctors available kiosk2 manually allots room/doctor for first patient in queue)
 // marks the doctor as occupied by setting readyToVisit false
 router.post(
