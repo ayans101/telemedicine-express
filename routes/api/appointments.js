@@ -43,4 +43,14 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   appointmentsApi.getAppointmentPrescriptions
 );
+router.post(
+  "/returnAppointments", 
+  passport.authenticate("jwt", { session: false }),
+  appointmentsApi.returnAppointments
+);
+router.get(
+  "/returnPatients", 
+  passport.authenticate("jwt", { session: false }),
+  appointmentsApi.returnPatients
+);
 module.exports = router;

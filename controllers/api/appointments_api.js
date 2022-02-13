@@ -303,3 +303,77 @@ module.exports.createdAppointments = async function (req, res) {
     });
   }
 };
+module.exports.returnAppointments = async function (req, res) {
+  try {
+    var todayDone = 0, todayCancelled = 0, todayTotal = 0;
+    const appointments = await Appointment.find();
+    console.log(appointments)
+    for (var i = 0; i < appointments.length; i++) {
+      const appointment = appointments[i];
+      var now = new Date();
+      var todayDD = String(now.getDate()).padStart(2, '0');
+      var todayMM = String(now.getMonth() + 1).padStart(2, '0');
+      var todayYYYY = now.getFullYear();
+      var YYYY = appointment.appointmentStartTime[0] + appointment.appointmentStartTime[1] + appointment.appointmentStartTime[2] + appointment.appointmentStartTime[3]; 
+      var MM = appointment.appointmentStartTime[5] + appointment.appointmentStartTime[6];
+      var DD = appointment.appointmentStartTime[8] + appointment.appointmentStartTime[9];
+      if (todayDD == DD && todayMM == MM && todayYYYY == YYYY) {
+        if (appointment.enabled == true) {
+          todayDone++;
+        }
+        else {
+          todayCancelled++;
+        }
+      }
+      if (todayDD == DD && todayMM == MM && todayYYYY == YYYY) {
+        todayTotal++;
+      }
+    }
+    return res.status(200).json({
+      message: "Appointments returned",
+      success: true,
+      data: {
+        todayDone: todayDone,
+        todayCancelled: todayCancelled,
+        todayTotal: todayTotal,
+      },
+    }); 
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
+  }
+};
+
+
+module.exports.returnPatients = async function (req, res) {
+  try {
+    const appointments = await Appointment.find();
+    var arr;
+    for (var i = 0; i < appointments.length; i++) {
+      const appointment = appointments[i];
+      if (appointment.enabled == true) {
+        arr.push(appointment.attendees);
+      }
+    }
+    function onlyUnique(value, index, self) {
+      return self.indexOf(value) === index;
+    }
+    var unique = arr.filter(onlyUnique);
+    return res.status(200).json({
+      message: "Appointments returned",
+      success: true,
+      data: {
+        unique: unique
+      },
+    }); 
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      message: "Internal Server Error",
+      success: false,
+    });
+  }
+};
