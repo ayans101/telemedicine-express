@@ -123,7 +123,10 @@ module.exports.deleteAppointment = async function (req, res) {
 
 module.exports.details = async function (req, res) {
   try {
-    let appointment = await Appointment.findById(req.params.id);
+    let appointment = await Appointment.findById(req.params.id).populate({
+      path: "attendees",
+      select: "-password",
+    });
     if (!appointment) {
       return res.status(404).json({
         message: "Appointment not found",
@@ -133,9 +136,7 @@ module.exports.details = async function (req, res) {
     return res.status(200).json({
       message: "Appointment Details Retrieved",
       success: true,
-      data: {
-        appointment: appointment,
-      },
+      data: appointment,
     });
   } catch (err) {
     console.log(err);
@@ -271,6 +272,13 @@ module.exports.createdAppointments = async function (req, res) {
           path: "creator",
           select: "-password",
         },
+        {
+          path: "attendees",
+          select: "-password",
+        },
+        {
+          path: "prescriptionLinks",
+        },
       ]);
     let appointments = await Appointment.find(
       { doctors: [user], enabled: true, kioskRoom: false },
@@ -285,6 +293,13 @@ module.exports.createdAppointments = async function (req, res) {
         {
           path: "creator",
           select: "-password",
+        },
+        {
+          path: "attendees",
+          select: "-password",
+        },
+        {
+          path: "prescriptionLinks",
         },
       ]);
     return res.status(200).json({
