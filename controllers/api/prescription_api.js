@@ -143,3 +143,27 @@ module.exports.delete = async function (req, res) {
     return handleError(error, res);
   }
 };
+module.exports.getAppointmentById = async function (req, res) {
+  try {
+    const _id = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(_id)) {
+      return res.status(400).json({
+        message: "Invalid Id",
+        success: false,
+      });
+    }
+    Prescription.findById(req.params.id)
+      .then((prescription) => {
+        return res.status(200).json({
+          success: true,
+          message: "Prescription successfully autofilled.",
+          data: prescription.patientDetails,
+        });
+      })
+      .catch((error) => {
+        return handleError(error, res);
+      });
+  } catch (error) {
+    return handleError(error, res);
+  }
+};

@@ -28,4 +28,9 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   prescriptionApi.find
 );
+router.post(
+  "/autofill/:id",
+  passport.authenticate("jwt", { session: false }),
+  prescriptionApi.getAppointmentById
+);
 module.exports = router;
